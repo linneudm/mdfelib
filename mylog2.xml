@@ -1,0 +1,18 @@
+<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
+    <soap12:Header>
+        <mdfeCabecMsg xmlns="http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcao">
+            <cUF>22</cUF>
+            <versaoDados>3.00</versaoDados>
+        </mdfeCabecMsg>
+    </soap12:Header>
+    <soap12:Body>
+        <mdfeDadosMsg xmlns="http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcao">
+            <enviMDFe versao="3.00" Id="MDFe22554575125155451212132">
+                <idLote>123</idLote>
+                <MDFe>
+                    sadasdad
+                </MDFe>
+            </enviMDFe>
+        </mdfeDadosMsg>
+    </soap12:Body>
+</soap12:Envelope>

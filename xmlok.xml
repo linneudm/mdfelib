@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soap:Body>
+        <mdfeDadosMsg xmlns="http://www.portalfiscal.inf.br/mdfe/wsdl/MdfeRecepcao">
+            <enviMDFe>
+                <idLote>01111</idLote>
+                <MDFe>
+                    <infMDFe
+                    versao="3.00"
+                    Id="MDFe22554575125155451212132">
+                        <ide>
+                            
+                        </ide>
+                    </infMDFe>
+                    <Signature>
+                    </Signature>
+                </MDFe>
+            </enviMDFe>
+        </mdfeDadosMsg> 
+    </soap:Body>
+</soap:Envelope>
