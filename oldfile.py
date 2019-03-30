@@ -157,6 +157,47 @@ xml = mdfe.export(f, 0)
 f.close()
 f = open("file.txt", "r")
 xml = f.read()
+
+def construir_xml_soap(self, metodo, dados, cabecalho=False):
+    NAMESPACE_MDFE = "http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcao"
+    """Mota o XML para o envio via SOAP"""
+    raiz = etree.Element('{%s}Envelope' % NAMESPACE_SOAP, nsmap={
+          'xsi': NAMESPACE_XSI, 'xsd': NAMESPACE_XSD,'soap12': NAMESPACE_SOAP})
+    header = etree.SubElement(raiz, '{%s}Header' % NAMESPACE_SOAP)
+    body = etree.SubElement(raiz, '{%s}Body' % NAMESPACE_SOAP)
+    #cbcMsg = etree.SubElement(header, 'mdfeCabecMsg', xmlns=NAMESPACE_MDFE)
+    # distribuição tem um corpo de xml diferente
+    if metodo == 'NFeDistribuicaoDFe':
+        print("OPS!!")
+        #xml = etree.SubElement(body, 'nfeDistDFeInteresse', xmlns=NAMESPACE_METODO+metodo)
+        #a = etree.SubElement(x, 'mdfeCabecMsg')
+    else:
+        idmdfe = "MDFe22554575125155451212132"
+        mdfeCabec = etree.SubElement(header, 'mdfeCabecMsg', xmlns=NAMESPACE_MDFE)
+        etree.SubElement(mdfeCabec, 'cUF').text = "22"
+        etree.SubElement(mdfeCabec, 'versaoDados').text = "3.00"
+        a = etree.SubElement(body, 'mdfeDadosMsg', xmlns=NAMESPACE_MDFE)
+        #envimdfe = etree.SubElement(a, 'enviMDFe')
+        mdfe = a
+
+        #a = etree.SubElement(body, 'mdfeDadosMsg', xmlns=NAMESPACE_METODO+metodo)
+        NAMESPACE_METODO2 = 'http://www.portalfiscal.inf.br/'
+    mdfe.append(dados)
+    envimdfe = mdfe.find("enviMDFe")
+    idLote = etree.Element('idLote')
+    root = etree.Element('MDFe')
+    idLote.text = "1"
+    envimdfe.insert(0, idLote)
+    envimdfe.insert(1, root)
+    #ide = envimdfe.find("ide")
+    #ide, emit, infModal, infDoc, tot
+    root.insert(0, envimdfe.find("ide"))
+    root.insert(1, envimdfe.find("emit"))
+    root.insert(2, envimdfe.find("infModal"))
+    root.insert(3, envimdfe.find("infDoc"))
+    root.insert(4, envimdfe.find("tot"))
+    return raiz
+
 xml = etree.XML(xml)
 #print(xml)
 #raiz = etree.Element('enviMDFe', xmlns=NAMESPACE_NFE, versao="3.00")
@@ -167,12 +208,48 @@ xml = etree.XML(xml)
 xml = mdfe.construir_xml_soap('MDFe', xml)
 
 certificado = os.path.realpath('..') + '/cert.pfx'
-senha = "1234"
+certificado_a1 = CertificadoA1(certificado)
+chave, cert = certificado_a1.separar_arquivo('1234', caminho=True)
+chave_cert = (cert, chave)
 
+def _post_header():
+    """Retorna um dicionário com os atributos para o cabeçalho da requisição HTTP"""
+    # PE é a única UF que exige SOAPAction no header
+    uf = "RS"
+    #####
+    response = {
+        'content-type': 'application/soap+xml; charset=utf-8;',
+        'Accept': 'application/soap+xml; charset=utf-8;',
+    }
+    #if uf.upper() == 'PE':
+        #response["SOAPAction"] = ""
+    return response
 
-url = 'https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcao/MDFeRecepcao.asmx'
+#url = 'https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcao/MDFeRecepcao.asmx'
 #url = 'https://mdfe.svrs.rs.gov.br/ws/MDFeRecepcao/MDFeRecepcao.asmx'
-#url = 'https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx'
+url = 'https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx'
+
+
+def post(xml, url):
+    try:
+        xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>'
+
+        # limpa xml com caracteres bugados para infNFeSupl em NFC-e
+        xml = re.sub(
+            '<qrCode>(.*?)</qrCode>',
+            lambda x: x.group(0).replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', ''),
+            etree.tostring(xml, encoding='unicode').replace('\n', '')
+        )
+        xml = xml_declaration + xml
+        #print(">>>>", xml)
+        # Faz o request com o servidor
+        result = requests.post(url, xml, headers=_post_header(), cert=chave_cert, verify=False)
+        result.encoding = 'utf-8'
+        return result
+    except requests.exceptions.RequestException as e:
+        raise e
+    finally:
+        certificado_a1.excluir()
 
 '''
 f = open("mylog.xml", "w")
@@ -189,14 +266,8 @@ f.close()
 print(a)
 '''
 
-certificado_a1 = CertificadoA1(certificado)
-chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
-chave_cert = (cert, chave)
-f = open("xmlfuncional.xml", "r")
-a1 = AssinaturaA1(certificado, senha)
+f = open("retornofuncional.xml", "r")
 xml = etree.XML(f.read())
-xml = a1.assinar(xml)
-print(etree.tostring(xml))
 #a1 = AssinaturaA1(certificado, "1234")
 #xml = a1.assinar(xml)
 #print(etree.tostring(xml))

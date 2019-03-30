@@ -20,6 +20,17 @@
 #
 
 from __future__ import unicode_literals
+import requests, re
+from pynfe.utils.flags import (
+    NAMESPACE_NFE,
+    NAMESPACE_XSD,
+    NAMESPACE_XSI,
+    VERSAO_PADRAO,
+    NAMESPACE_SOAP,
+    CODIGOS_ESTADOS,
+    NAMESPACE_BETHA,
+    NAMESPACE_METODO
+)
 import sys
 import re as re_
 import base64
@@ -4308,6 +4319,81 @@ class MountMDFeType(GeneratedsSuper):
             autXML_.export(outfile, level, namespace_, name_='autXML', pretty_print=pretty_print)
         if self.infAdic is not None:
             self.infAdic.export(outfile, level, namespace_, name_='infAdic', pretty_print=pretty_print)
+
+    def construir_xml_soap(self, metodo, dados, cabecalho=False):
+        NAMESPACE_MDFE = "http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcao"
+        """Mota o XML para o envio via SOAP"""
+        raiz = etree_.Element('{%s}Envelope' % NAMESPACE_SOAP, nsmap={
+              'xsi': NAMESPACE_XSI, 'xsd': NAMESPACE_XSD,'soap12': NAMESPACE_SOAP})
+        header = etree_.SubElement(raiz, '{%s}Header' % NAMESPACE_SOAP)
+        body = etree_.SubElement(raiz, '{%s}Body' % NAMESPACE_SOAP)
+        #cbcMsg = etree.SubElement(header, 'mdfeCabecMsg', xmlns=NAMESPACE_MDFE)
+        # distribuição tem um corpo de xml diferente
+        if metodo == 'NFeDistribuicaoDFe':
+            print("OPS!!")
+            #xml = etree.SubElement(body, 'nfeDistDFeInteresse', xmlns=NAMESPACE_METODO+metodo)
+            #a = etree.SubElement(x, 'mdfeCabecMsg')
+        else:
+            idmdfe = "MDFe22554575125155451212132"
+            mdfeCabec = etree_.SubElement(header, 'mdfeCabecMsg', xmlns=NAMESPACE_MDFE)
+            etree_.SubElement(mdfeCabec, 'cUF').text = "22"
+            etree_.SubElement(mdfeCabec, 'versaoDados').text = "3.00"
+            a = etree_.SubElement(body, 'mdfeDadosMsg', xmlns=NAMESPACE_MDFE)
+            #envimdfe = etree.SubElement(a, 'enviMDFe')
+            mdfe = a
+            #a = etree.SubElement(body, 'mdfeDadosMsg', xmlns=NAMESPACE_METODO+metodo)
+            #NAMESPACE_METODO2 = 'http://www.portalfiscal.inf.br/'
+        #print(dados)
+        mdfe.append(dados)
+        envimdfe = mdfe.find("enviMDFe")
+        idLote = etree_.Element('idLote')
+        root = etree_.Element('MDFe')
+        idLote.text = "1"
+        envimdfe.insert(0, idLote)
+        envimdfe.insert(1, root)
+        #ide = envimdfe.find("ide")
+        #ide, emit, infModal, infDoc, tot
+        root.insert(0, envimdfe.find("ide"))
+        root.insert(1, envimdfe.find("emit"))
+        root.insert(2, envimdfe.find("infModal"))
+        root.insert(3, envimdfe.find("infDoc"))
+        root.insert(4, envimdfe.find("tot"))
+        return raiz
+
+    def _post_header(self):
+        """Retorna um dicionário com os atributos para o cabeçalho da requisição HTTP"""
+        # PE é a única UF que exige SOAPAction no header
+        uf = "RS"
+        #####
+        response = {
+            'content-type': 'application/soap+xml; charset=utf-8;',
+            'Accept': 'application/soap+xml; charset=utf-8;',
+        }
+        #if uf.upper() == 'PE':
+            #response["SOAPAction"] = ""
+        return response
+
+    def post(self, xml, url, chave_cert):
+        try:
+            xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>'
+
+            # limpa xml com caracteres bugados para infNFeSupl em NFC-e
+            xml = re.sub(
+                '<qrCode>(.*?)</qrCode>',
+                lambda x: x.group(0).replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', ''),
+                etree_.tostring(xml, encoding='unicode').replace('\n', '')
+            )
+            xml = xml_declaration + xml
+            #print(">>>>", xml)
+            # Faz o request com o servidor
+            result = requests.post(url, xml, headers=self._post_header(), cert=chave_cert, verify=False)
+            result.encoding = 'utf-8'
+            return result
+        except requests.exceptions.RequestException as e:
+            raise e
+        finally:
+            print("OK!")
+            #certificado_a1.excluir()
     
 
 class infMDFeType(GeneratedsSuper):
