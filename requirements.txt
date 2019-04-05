@@ -1,0 +1,2 @@
+lxml==4.3.2
+-e git://github.com/TadaSoftware/PyNFe@2840df98e8ac08f8ce48d22c630aff0400d0520d#egg=PyNFe
