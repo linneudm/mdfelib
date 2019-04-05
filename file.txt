@@ -1,1 +1,75 @@
-b'<!DOCTYPE html>\r\n<html>\r\n    <head>\r\n        <title>The resource cannot be found.</title>\r\n        <meta name="viewport" content="width=device-width" />\r\n        <style>\r\n         body {font-family:"Verdana";font-weight:normal;font-size: .7em;color:black;} \r\n         p {font-family:"Verdana";font-weight:normal;color:black;margin-top: -5px}\r\n         b {font-family:"Verdana";font-weight:bold;color:black;margin-top: -5px}\r\n         H1 { font-family:"Verdana";font-weight:normal;font-size:18pt;color:red }\r\n         H2 { font-family:"Verdana";font-weight:normal;font-size:14pt;color:maroon }\r\n         pre {font-family:"Consolas","Lucida Console",Monospace;font-size:11pt;margin:0;padding:0.5em;line-height:14pt}\r\n         .marker {font-weight: bold; color: black;text-decoration: none;}\r\n         .version {color: gray;}\r\n         .error {margin-bottom: 10px;}\r\n         .expandable { text-decoration:underline; font-weight:bold; color:navy; cursor:hand; }\r\n         @media screen and (max-width: 639px) {\r\n          pre { width: 440px; overflow: auto; white-space: pre-wrap; word-wrap: break-word; }\r\n         }\r\n         @media screen and (max-width: 479px) {\r\n          pre { width: 280px; }\r\n         }\r\n        </style>\r\n    </head>\r\n\r\n    <body bgcolor="white">\r\n\r\n            <span><H1>Server Error in \'/WS\' Application.<hr width=100% size=1 color=silver></H1>\r\n\r\n            <h2> <i>The resource cannot be found.</i> </h2></span>\r\n\r\n            <font face="Arial, Helvetica, Geneva, SunSans-Regular, sans-serif ">\r\n\r\n            <b> Description: </b>HTTP 404. The resource you are looking for (or one of its dependencies) could have been removed, had its name changed, or is temporarily unavailable. &nbsp;Please review the following URL and make sure that it is spelled correctly.\r\n            <br><br>\r\n\r\n            <b> Requested URL: </b>/ws/Recepcao/Recepcao.asmx<br><br>\r\n\r\n    </body>\r\n</html>\r\n'
+<enviMDFe versao="3.00" Id="MDFe22554575125155451212132">
+    <ide>
+        <cUF>23</cUF>
+        <tpAmb>2</tpAmb>
+        <tpEmit>1</tpEmit>
+        <mod>58</mod>
+        <serie>1</serie>
+        <nMDF>1</nMDF>
+        <cMDF>00004894</cMDF>
+        <cDV>4</cDV>
+        <modal>1</modal>
+        <dhEmi>2019-03-26T13:58:06 03:00</dhEmi>
+        <tpEmis>1</tpEmis>
+        <procEmi>0</procEmi>
+        <verProc>Odoo</verProc>
+        <UFIni>CE</UFIni>
+        <UFFim>CE</UFFim>
+        <infMunCarrega>
+            <cMunCarrega>2305506</cMunCarrega>
+            <xMunCarrega>TESTE</xMunCarrega>
+        </infMunCarrega>
+    </ide>
+    <emit>
+        <CNPJ>15443409000150</CNPJ>
+        <IE>194995925</IE>
+        <xNome>Razao Social</xNome>
+        <xFant>Fantasia</xFant>
+        <enderEmit>
+            <xLgr>Rua</xLgr>
+            <nro>150</nro>
+            <xBairro>Centro</xBairro>
+            <cMun>2305506</cMun>
+            <xMun>IGUATU</xMun>
+            <CEP>63500000</CEP>
+            <UF>CE</UF>
+            <fone>08002755700</fone>
+        </enderEmit>
+    </emit>
+    <infModal versaoModal="3.00">
+        <rodo>
+            <veicTracao>
+                <cInt>0001</cInt>
+                <placa>PMR3000</placa>
+                <tara>4250</tara>
+                <capKG>0</capKG>
+                <capM3>0</capM3>
+                <condutor>
+                    <xNome>Luis Felipe Mileo</xNome>
+                    <CPF>33333333333</CPF>
+                </condutor>
+                <tpRod>02</tpRod>
+                <tpCar>02</tpCar>
+                <UF>CE</UF>
+            </veicTracao>
+        </rodo>
+    </infModal>
+    <infDoc>
+        <infMunDescarga>
+            <cMunDescarga>2305506</cMunDescarga>
+            <xMunDescarga>Cidade</xMunDescarga>
+            <infNFe>
+                <chNFe>23180341426966004836558720000002681197872700</chNFe>
+            </infNFe>
+            <infNFe>
+                <chNFe>23180341426966003600558720000012321410321707</chNFe>
+            </infNFe>
+        </infMunDescarga>
+    </infDoc>
+    <tot>
+        <qNFe>2</qNFe>
+        <vCarga>3044.00</vCarga>
+        <cUnid>01</cUnid>
+        <qCarga>57.0000</qCarga>
+    </tot>
+</enviMDFe>

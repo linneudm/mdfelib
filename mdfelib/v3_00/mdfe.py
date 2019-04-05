@@ -55,9 +55,9 @@ class MdfeUrls(Enum):
     """
     Enum para os webservices
     """
-    RECEPCAO = "svrs.rs.gov.br/ws/Recepcao/MDFeRecepcao.asmx" #0
-    RETRECEPCAO = "svrs.rs.gov.br/ws/RetRecepcao/MDFeRetRecepcao.asmx" #1
-    RECEPCAOEVENTO = "svrs.rs.gov.br/ws/RecepcaoEvento/RecepcaoEvento.asmx" #2
+    RECEPCAO = "svrs.rs.gov.br/ws/MDFeRecepcao/MDFeRecepcao.asmx" #0
+    RETRECEPCAO = "svrs.rs.gov.br/ws/MDFeRetRecepcao/MDFeRetRecepcao.asmx" #1
+    RECEPCAOEVENTO = "svrs.rs.gov.br/ws/MDFeRecepcaoEvento/MDFeRecepcaoEvento.asmx" #2
     CONSULTA = "svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx" #3
     STATUSSERVICO = "svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx" #4
     CONSNAOENC = "svrs.rs.gov.br/ws/MDFeConsNaoEnc/MDFeConsNaoEnc.asmx" #5
