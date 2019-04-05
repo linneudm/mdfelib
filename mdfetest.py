@@ -164,7 +164,7 @@ xml = mdfe.construir_xml_soap('MDFe', xml)
 certificado = os.path.realpath('../../') + '/cert.pfx'
 senha = "1234"
 
-print(mdfe3.urls_webservice(5,2))
+url =  mdfe3.urls_webservice(5,2)
 
 '''
 f = open("mylog.xml", "w")
@@ -182,7 +182,7 @@ print(a)
 '''
 
 
-'''
+#'''
 certificado_a1 = CertificadoA1(certificado)
 chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
 chave_cert = (cert, chave)
@@ -201,4 +201,4 @@ f.write(a)
 f.close()
 print(a)
 
-'''
+#'''
