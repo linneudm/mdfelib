@@ -1,25 +1,75 @@
-<?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<soap:Header>
-		<mdfeCabecMsg xmlns="http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcao">
-			<cUF>22</cUF>
-			<versaoDados>3.00</versaoDados>
-		</mdfeCabecMsg>
-	</soap:Header>
-	<soap:Body>
-		<mdfeRecepcaoLoteResult xmlns="http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRecepcao">
-			<retEnviMDFe versao="3.00" xmlns="http://www.portalfiscal.inf.br/mdfe">
-				<tpAmb>2</tpAmb>
-				<cUF>22</cUF>
-				<verAplic>RS20190308130713</verAplic>
-				<cStat>103</cStat>
-				<xMotivo>Arquivo recebido com sucesso</xMotivo>
-				<infRec>
-					<nRec>229000006755551</nRec>
-					<dhRecbto>2019-03-30T19:20:14-03:00</dhRecbto>
-					<tMed>1</tMed>
-				</infRec>
-			</retEnviMDFe>
-		</mdfeRecepcaoLoteResult>
-	</soap:Body>
-</soap:Envelope>
+<enviMDFe versao="3.00" Id="MDFe22554575125155451212132">
+    <ide>
+        <cUF>23</cUF>
+        <tpAmb>2</tpAmb>
+        <tpEmit>1</tpEmit>
+        <mod>58</mod>
+        <serie>1</serie>
+        <nMDF>1</nMDF>
+        <cMDF>00004894</cMDF>
+        <cDV>4</cDV>
+        <modal>1</modal>
+        <dhEmi>2019-03-26T13:58:06 03:00</dhEmi>
+        <tpEmis>1</tpEmis>
+        <procEmi>0</procEmi>
+        <verProc>Odoo</verProc>
+        <UFIni>CE</UFIni>
+        <UFFim>CE</UFFim>
+        <infMunCarrega>
+            <cMunCarrega>2305506</cMunCarrega>
+            <xMunCarrega>TESTE</xMunCarrega>
+        </infMunCarrega>
+    </ide>
+    <emit>
+        <CNPJ>15443409000150</CNPJ>
+        <IE>194995925</IE>
+        <xNome>Razao Social</xNome>
+        <xFant>Fantasia</xFant>
+        <enderEmit>
+            <xLgr>Rua</xLgr>
+            <nro>150</nro>
+            <xBairro>Centro</xBairro>
+            <cMun>2305506</cMun>
+            <xMun>IGUATU</xMun>
+            <CEP>63500000</CEP>
+            <UF>CE</UF>
+            <fone>08002755700</fone>
+        </enderEmit>
+    </emit>
+    <infModal versaoModal="3.00">
+        <rodo>
+            <veicTracao>
+                <cInt>0001</cInt>
+                <placa>PMR3000</placa>
+                <tara>4250</tara>
+                <capKG>0</capKG>
+                <capM3>0</capM3>
+                <condutor>
+                    <xNome>Luis Felipe Mileo</xNome>
+                    <CPF>33333333333</CPF>
+                </condutor>
+                <tpRod>02</tpRod>
+                <tpCar>02</tpCar>
+                <UF>CE</UF>
+            </veicTracao>
+        </rodo>
+    </infModal>
+    <infDoc>
+        <infMunDescarga>
+            <cMunDescarga>2305506</cMunDescarga>
+            <xMunDescarga>Cidade</xMunDescarga>
+            <infNFe>
+                <chNFe>23180341426966004836558720000002681197872700</chNFe>
+            </infNFe>
+            <infNFe>
+                <chNFe>23180341426966003600558720000012321410321707</chNFe>
+            </infNFe>
+        </infMunDescarga>
+    </infDoc>
+    <tot>
+        <qNFe>2</qNFe>
+        <vCarga>3044.00</vCarga>
+        <cUnid>01</cUnid>
+        <qCarga>57.0000</qCarga>
+    </tot>
+</enviMDFe>

@@ -49,6 +49,40 @@ if sys.version_info.major == 2:
 else:
     BaseStrType_ = str
 
+from enum import Enum
+
+class MdfeUrls(Enum):
+    """
+    Enum para os webservices
+    """
+    RECEPCAO = "svrs.rs.gov.br/ws/Recepcao/Recepcao.asmx" #0
+    RETRECEPCAO = "svrs.rs.gov.br/ws/RetRecepcao/RetRecepcao.asmx" #1
+    RECEPCAOEVENTO = "svrs.rs.gov.br/ws/RecepcaoEvento/RecepcaoEvento.asmx" #2
+    CONSULTA = "svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx" #3
+    STATUSSERVICO = "svrs.rs.gov.br/ws/MDFeStatusServico/MDFeStatusServico.asmx" #4
+    CONSNAOENC = "svrs.rs.gov.br/ws/MDFeConsNaoEnc/MDFeConsNaoEnc.asmx" #5
+    DISTRIBUICAODFE = "svrs.rs.gov.br/ws/MDFeDistribuicaoDFe/MDFeDistribuicaoDFe.asmx" #6
+
+
+def urls_webservice(servico, ambiente) -> str:
+    """
+    Funcao que retorna a url com base no servico e ambiente selecionado.
+    servico: int (validos: entre 0 e 6)
+    ambiente: int (validos: 1 ou 2)
+    return: string
+    """
+    url_options = [(tag, tag.value) for tag in MdfeUrls]
+
+    if(not isinstance(servico, int) or not isinstance(ambiente, int)):
+        raise AttributeError("Tipo de parâmetro inválido.")
+    elif(servico >= len(url_options) or (ambiente != 1 and ambiente !=2)):
+        raise ValueError("Valor inválido.")
+    elif(ambiente == 1):
+        return "https://mdfe." + url_options[servico][1] 
+    elif(ambiente == 2):
+        return "https://mdfe-homologacao." + url_options[servico][1]
+    else:
+        raise BaseException("Erro desconhecido.")
 
 def parsexml_(infile, parser=None, **kwargs):
     if parser is None:

@@ -54,7 +54,7 @@ carregamento_1 = mdfe3.infMunCarregaType(
 #Formato AAAA-MM-DDTHH:MM:DD TZD
 ide = mdfe3.ideType(
     cUF='23',
-    tpAmb=1,
+    tpAmb=2,
     tpEmit=1,
     tpTransp=None,
     mod=58,
@@ -158,21 +158,13 @@ f.close()
 f = open("file.txt", "r")
 xml = f.read()
 xml = etree.XML(xml)
-#print(xml)
-#raiz = etree.Element('enviMDFe', xmlns=NAMESPACE_NFE, versao="3.00")
-#etree.SubElement(raiz, 'idLote').text = str(1)  # numero autoincremental gerado pelo sistema
-#etree.SubElement(raiz, 'indSinc').text = str(1)  # 0 para assincrono, 1 para sincrono
-#raiz.append(xml)
 
 xml = mdfe.construir_xml_soap('MDFe', xml)
 
-certificado = os.path.realpath('..') + '/cert.pfx'
+certificado = os.path.realpath('../../') + '/cert.pfx'
 senha = "1234"
 
-
-url = 'https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeRecepcao/MDFeRecepcao.asmx'
-#url = 'https://mdfe.svrs.rs.gov.br/ws/MDFeRecepcao/MDFeRecepcao.asmx'
-#url = 'https://mdfe-homologacao.svrs.rs.gov.br/ws/MDFeConsulta/MDFeConsulta.asmx'
+print(mdfe3.urls_webservice(5,2))
 
 '''
 f = open("mylog.xml", "w")
@@ -189,6 +181,8 @@ f.close()
 print(a)
 '''
 
+
+'''
 certificado_a1 = CertificadoA1(certificado)
 chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
 chave_cert = (cert, chave)
@@ -206,3 +200,5 @@ a = str(res.content)
 f.write(a)
 f.close()
 print(a)
+
+'''
