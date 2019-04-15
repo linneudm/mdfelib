@@ -26,6 +26,7 @@ from pynfe.utils.flags import (
 )
 from pynfe.utils import etree, so_numeros
 import datetime
+from lxml import etree as etree_
 #import lxml
 import os
 
@@ -157,6 +158,7 @@ xml = mdfe.export(f, 0)
 f.close()
 f = open("file.txt", "r")
 xml = f.read()
+print()
 xml = etree.XML(xml)
 
 xml = mdfe.construir_xml_soap('MDFe', xml)
@@ -164,36 +166,72 @@ xml = mdfe.construir_xml_soap('MDFe', xml)
 certificado = os.path.realpath('../../') + '/cert.pfx'
 senha = "1234"
 
-url =  mdfe3.urls_webservice(0,2)
+url =  mdfe3.urls_webservice(1,2)
 
-'''
-f = open("mylog.xml", "w")
-a = str(etree.tostring(xml))
-f.write(a)
-f.close()
+def mypost_header():
+    """Retorna um dicionário com os atributos para o cabeçalho da requisição HTTP"""
+    # PE é a única UF que exige SOAPAction no header
+    uf = "RS"
+    #####
+    response = {
+        #'Host': "http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRetRecepcao",
+        'content-type': 'application/soap+xml; charset=utf-8;',
+        'Accept': 'application/soap+xml; charset=utf-8;',
+        #'SOAPAction': 'http://www.portalfiscal.inf.br/mdfe/wsdl/MDFeRetRecepcao',
+    }
+    #if uf.upper() == 'PE':
+        #response["SOAPAction"] = ""
+    return response
+
+def mypost(xml, url, chave_cert):
+    print(etree_.tostring(xml))
+    try:
+        xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>'
+
+        # limpa xml com caracteres bugados para infNFeSupl em NFC-e
+        xml = re.sub(
+            '<qrCode>(.*?)</qrCode>',
+            lambda x: x.group(0).replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', ''),
+            etree_.tostring(xml, encoding='unicode').replace('\n', '')
+        )
+        xml = xml_declaration + xml
+        #print(">>>>", xml)
+        # Faz o request com o servidor
+        result = requests.post(url, xml, headers=mypost_header(), verify=False)
+        result.encoding = 'utf-8'
+        return result
+    except requests.exceptions.RequestException as e:
+        raise e
+    finally:
+        print("OK!")
+        #certificado_a1.excluir()
+
+
+#print(etree.tostring(xml))
+
+#f = open("mylog.xml", "w")
+#a = str(etree.tostring(xml))
+#f.write(a)
+#f.close()
 #a1 = AssinaturaA1(certificado, "1234")
 #xml = a1.assinar(xml)
-res = post(xml, url)
-f = open("file.txt", "w")
-a = str(res.content)
-f.write(a)
-f.close()
-print(a)
-'''
 
 
 #'''
 certificado_a1 = CertificadoA1(certificado)
 chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
 chave_cert = (cert, chave)
-f = open("xmlfuncional.xml", "r")
 a1 = AssinaturaA1(certificado, senha)
-xml = etree.XML(f.read())
-xml = a1.assinar(xml)
-print(etree.tostring(xml))
-#a1 = AssinaturaA1(certificado, "1234")
+#XML DE ENVIO
+#f = open("mylog.xml", "r")
+#XML DE RETORNO
+f = open("xmlok.xml", "r")
+xml = f.read()
+f.close()
+xml = etree.XML(xml)
 #xml = a1.assinar(xml)
-#print(etree.tostring(xml))
+#print(xml)
+print(url)
 res = mdfe.post(xml, url, chave_cert)
 f = open("file.txt", "w")
 a = str(res.content)
@@ -202,3 +240,23 @@ f.close()
 print(a)
 
 #'''
+
+'''
+certificado_a1 = CertificadoA1(certificado)
+chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
+chave_cert = (cert, chave)
+#f = open("xmlfuncional.xml", "w")
+a1 = AssinaturaA1(certificado, senha)
+#xml = etree.XML(f.read())
+print(etree.tostring(xml))
+xml = a1.assinar(xml)
+print(etree.tostring(xml))
+#print(xml)
+res = mdfe.post(xml, url, chave_cert)
+f = open("file.txt", "w")
+a = str(res.content)
+f.write(a)
+f.close()
+print(a)
+
+'''

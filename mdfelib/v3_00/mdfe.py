@@ -41,7 +41,7 @@ try:
     from lxml import etree as etree_
 except ImportError:
     from xml.etree import ElementTree as etree_
-
+from lxml.builder import ElementMaker
 
 Validate_simpletypes_ = False
 if sys.version_info.major == 2:
@@ -4364,11 +4364,10 @@ class MountMDFeType(GeneratedsSuper):
         #cbcMsg = etree.SubElement(header, 'mdfeCabecMsg', xmlns=NAMESPACE_MDFE)
         # distribuição tem um corpo de xml diferente
         if metodo == 'NFeDistribuicaoDFe':
-            print("OPS!!")
+            print("OPS!! Metodo NFe?? Consultar mdfe.py, linha 4367.")
             #xml = etree.SubElement(body, 'nfeDistDFeInteresse', xmlns=NAMESPACE_METODO+metodo)
             #a = etree.SubElement(x, 'mdfeCabecMsg')
         else:
-            idmdfe = "MDFe22554575125155451212132"
             mdfeCabec = etree_.SubElement(header, 'mdfeCabecMsg', xmlns=NAMESPACE_MDFE)
             etree_.SubElement(mdfeCabec, 'cUF').text = "22"
             etree_.SubElement(mdfeCabec, 'versaoDados').text = "3.00"
@@ -4380,6 +4379,7 @@ class MountMDFeType(GeneratedsSuper):
         #print(dados)
         mdfe.append(dados)
         envimdfe = mdfe.find("enviMDFe")
+        #import pdb; pdb.set_trace()
         idLote = etree_.Element('idLote')
         root = etree_.Element('MDFe')
         idLote.text = "1"
@@ -4418,7 +4418,6 @@ class MountMDFeType(GeneratedsSuper):
                 etree_.tostring(xml, encoding='unicode').replace('\n', '')
             )
             xml = xml_declaration + xml
-            #print(">>>>", xml)
             # Faz o request com o servidor
             result = requests.post(url, xml, headers=self._post_header(), cert=chave_cert, verify=False)
             result.encoding = 'utf-8'
@@ -4426,7 +4425,7 @@ class MountMDFeType(GeneratedsSuper):
         except requests.exceptions.RequestException as e:
             raise e
         finally:
-            print("OK!")
+            pass
             #certificado_a1.excluir()
     
 
