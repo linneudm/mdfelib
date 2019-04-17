@@ -50,6 +50,7 @@ else:
     BaseStrType_ = str
 
 from enum import Enum
+import re
 
 class MdfeUrls(Enum):
     """
@@ -4376,22 +4377,25 @@ class MountMDFeType(GeneratedsSuper):
             mdfe = a
             #a = etree.SubElement(body, 'mdfeDadosMsg', xmlns=NAMESPACE_METODO+metodo)
             #NAMESPACE_METODO2 = 'http://www.portalfiscal.inf.br/'
-        #print(dados)
         mdfe.append(dados)
         envimdfe = mdfe.find("enviMDFe")
+        envimdfe.attrib['xmlns'] = 'http://www.portalfiscal.inf.br/mdfe'
+        idmdfe = envimdfe.attrib.pop('Id')
         #import pdb; pdb.set_trace()
         idLote = etree_.Element('idLote')
-        root = etree_.Element('MDFe')
+        root = etree_.Element('MDFe', xmlns="http://www.portalfiscal.inf.br/mdfe")
+        root2 = etree_.Element('infMDFe', Id=idmdfe, versao="3.00")
         idLote.text = "1"
         envimdfe.insert(0, idLote)
         envimdfe.insert(1, root)
+        root.insert(0, root2)
         #ide = envimdfe.find("ide")
         #ide, emit, infModal, infDoc, tot
-        root.insert(0, envimdfe.find("ide"))
-        root.insert(1, envimdfe.find("emit"))
-        root.insert(2, envimdfe.find("infModal"))
-        root.insert(3, envimdfe.find("infDoc"))
-        root.insert(4, envimdfe.find("tot"))
+        root2.insert(0, envimdfe.find("ide"))
+        root2.insert(1, envimdfe.find("emit"))
+        root2.insert(2, envimdfe.find("infModal"))
+        root2.insert(3, envimdfe.find("infDoc"))
+        root2.insert(4, envimdfe.find("tot"))
         return raiz
 
     def _post_header(self):
@@ -4407,9 +4411,24 @@ class MountMDFeType(GeneratedsSuper):
             #response["SOAPAction"] = ""
         return response
 
+    def moveAssinatura(self,xml):
+        
+        mdfe = xml.find(".//ns:MDFe", namespaces={'ns': 'http://www.portalfiscal.inf.br/mdfe'})
+        signature = xml.xpath('//ns:Signature', namespaces={'ns': 'http://www.w3.org/2000/09/xmldsig#'})
+        mdfe.insert(8, signature[0])
+        #print(etree_.tostring(xml))
+
     def post(self, xml, url, chave_cert):
+        #print(etree_.tostring(xml))
+        #Localiza a tag para assinar embaixo
+        if(url == urls_webservice(0,2)):
+            self.moveAssinatura(xml)
+        #sign = (xml.find(".//Signature").tag)
+        #print(">>>>>2",sign)
+        #import pdb; pdb.set_trace()
         try:
             xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>'
+
 
             # limpa xml com caracteres bugados para infNFeSupl em NFC-e
             xml = re.sub(
@@ -4418,7 +4437,6 @@ class MountMDFeType(GeneratedsSuper):
                 etree_.tostring(xml, encoding='unicode').replace('\n', '')
             )
             xml = xml_declaration + xml
-            # Faz o request com o servidor
             result = requests.post(url, xml, headers=self._post_header(), cert=chave_cert, verify=False)
             result.encoding = 'utf-8'
             return result

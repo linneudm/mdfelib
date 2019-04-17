@@ -64,7 +64,7 @@ ide = mdfe3.ideType(
     cMDF='00004894',
     cDV='4',
     modal=1,
-    dhEmi='2019-03-26T13:58:06 03:00',
+    dhEmi='2019-03-26T13:58:06-03:00',
     tpEmis=1,
     procEmi='0',
     verProc='Odoo',
@@ -119,7 +119,7 @@ infMunDescarga= mdfe3.infMunDescargaType(
 infDoc= mdfe3.infDocType(infMunDescarga=[infMunDescarga])
 
 condutor_1 = rodo3.condutorType(
-    xNome='Luis Felipe Mileo',
+    xNome='LuisFelipeMileo',
     CPF='33333333333'
 )
 
@@ -148,17 +148,16 @@ rodo = rodo3.rodo(
 modal = mdfe3.infModalType(versaoModal="3.00", anytypeobjs_=rodo)
 
 mdfe = mdfe3.MountMDFeType(
-    versao="3.00", Id="MDFe22554575125155451212132", ide=ide, emit=emit, infModal=modal,
+    versao="3.00", Id="MDFe35140210142785000190580010000000021491283024", ide=ide, emit=emit, infModal=modal,
     infDoc=infDoc, seg=None, tot=tot, lacres=None, autXML=None,
     infAdic=None
 )
 
 f = open("file.txt", "w")
-xml = mdfe.export(f, 0)
+xml = mdfe.export(f, 0, pretty_print=False)
 f.close()
 f = open("file.txt", "r")
 xml = f.read()
-print()
 xml = etree.XML(xml)
 
 xml = mdfe.construir_xml_soap('MDFe', xml)
@@ -217,46 +216,47 @@ def mypost(xml, url, chave_cert):
 #xml = a1.assinar(xml)
 
 
-#'''
-certificado_a1 = CertificadoA1(certificado)
-chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
-chave_cert = (cert, chave)
-a1 = AssinaturaA1(certificado, senha)
-#XML DE ENVIO
-#f = open("mylog.xml", "r")
-#XML DE RETORNO
-f = open("xmlok.xml", "r")
-xml = f.read()
-f.close()
-xml = etree.XML(xml)
-#xml = a1.assinar(xml)
-#print(xml)
-print(url)
-res = mdfe.post(xml, url, chave_cert)
-f = open("file.txt", "w")
-a = str(res.content)
-f.write(a)
-f.close()
-print(a)
+def tarefa(tipo, xml=xml):
 
-#'''
+    if(tipo == 1):
+        #'''
+        certificado_a1 = CertificadoA1(certificado)
+        chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
+        chave_cert = (cert, chave)
+        a1 = AssinaturaA1(certificado, senha)
+        #XML DE ENVIO
+        #f = open("xmlenvioOK.xml", "r")
+        #XML DE RETORNO
+        f = open("xmlok.xml", "r")
+        xml = f.read()
+        f.close()
+        xml = etree.XML(xml)
+        #xml = a1.assinar(xml)
+        #print(xml)
+        print(url)
+        res = mdfe.post(xml, url, chave_cert)
+        f = open("file.txt", "w")
+        a = str(res.content)
+        f.write(a)
+        f.close()
+        print(a)
 
-'''
-certificado_a1 = CertificadoA1(certificado)
-chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
-chave_cert = (cert, chave)
-#f = open("xmlfuncional.xml", "w")
-a1 = AssinaturaA1(certificado, senha)
-#xml = etree.XML(f.read())
-print(etree.tostring(xml))
-xml = a1.assinar(xml)
-print(etree.tostring(xml))
-#print(xml)
-res = mdfe.post(xml, url, chave_cert)
-f = open("file.txt", "w")
-a = str(res.content)
-f.write(a)
-f.close()
-print(a)
+        #'''
 
-'''
+    elif (tipo == 2):
+        certificado_a1 = CertificadoA1(certificado)
+        chave, cert = certificado_a1.separar_arquivo(senha, caminho=True)
+        chave_cert = (cert, chave)
+        a1 = AssinaturaA1(certificado, senha)
+        xml = a1.assinar(xml)
+        res = mdfe.post(xml, url, chave_cert)
+        f = open("xmlfuncional.xml", "w")
+        f.write(str(etree.tostring(xml)))
+        f.close()
+        f = open("file.txt", "w")
+        a = str(res.content)
+        print(a)
+        f.write(a)
+        f.close()
+
+tarefa(1)
